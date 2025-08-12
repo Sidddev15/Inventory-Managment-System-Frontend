@@ -14,7 +14,7 @@ import {
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@example.com');
+  const [email, setEmail] = useState('admin1@example.com');
   const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -29,6 +29,7 @@ const LoginPage: React.FC = () => {
         password,
       });
       login(res.data.token);
+      http.defaults.headers.common.Authorization = `${res.data.token}`;
       navigate('/dashboard');
     } catch (error: any) {
       setErr(error?.response?.data?.error ?? 'Login Failed');

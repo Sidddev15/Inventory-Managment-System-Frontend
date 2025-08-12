@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 
 const DashboardPage: React.FC = () => {
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
         Dashboard
       </Typography>

@@ -5,8 +5,14 @@ const http = axios.create({
     timeout: 15000
 });
 
+// on boot, set the default header if a token already exist
+const bootToken = localStorage.getItem('auth-item');
+if (bootToken) {
+    http.defaults.headers.common.Authorization = `Bearer ${bootToken}`;
+}
+
 http.interceptors.request.use((config) => {
-    const token = localStorage.getItem('auth-token');
+    const token = localStorage.getItem('auth_token');
     if (token) {
         config.headers = config.headers ?? {};
         config.headers.Authorization = `Bearer ${token}`;
