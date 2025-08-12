@@ -20,3 +20,14 @@ export async function fetchRecentMovements(limit = 10) {
     const { data } = await http.get('/inventory-movements');
     return (Array.isArray(data) ? data : []).slice(0, limit);
 }
+
+export async function fetchMovementsByDate(dateISO: string) {
+    // dateISO expected as 'YYYY-MM-DD'
+    const { data } = await http.get<Movement[]>('/inventory-movements/filter', { params: { date: dateISO, limit: 200 } });
+    return data;
+}
+
+export async function fetchMovementsByRange(fromISO: string, toISO: string) {
+    const { data } = await http.get<Movement[]>('/inventory-movements/filter', { params: { from: fromISO, to: toISO, limit: 500 } });
+    return data;
+}
