@@ -22,6 +22,16 @@ export type InventoryItem = {
     createdAt?: string;
 }
 
+export type SaveInventoryPayload = {
+    code: string;
+    name: string;
+    size?: string;
+    description?: string;
+    group_id?: number;
+    threshold?: number;
+    quantity?: number; // allow on create
+};
+
 export async function fetchInventorySummary() {
     const { data } = await http.get<InventorySummaryItem[]>('/inventory/summary');
     return data;
@@ -48,5 +58,15 @@ export type ItemGroup = { id: number; name: string; description?: string };
 
 export async function fetchItemGroups() {
     const { data } = await http.get<ItemGroup[]>('/item-groups');
+    return data;
+}
+
+export async function createInventoryItem(payload: SaveInventoryPayload) {
+    const { data } = await http.post('/inventory', payload);
+    return data;
+}
+
+export async function updateInventoryItemAPI(id: number, payload: Partial<SaveInventoryPayload>) {
+    const { data } = await http.put(`/inventory/${id}`, payload);
     return data;
 }

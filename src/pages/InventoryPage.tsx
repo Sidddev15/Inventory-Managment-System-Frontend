@@ -18,6 +18,7 @@ import {
   type ItemGroup,
 } from '../services/inventory';
 import { useAuth } from '../store/AuthContext';
+import ItemDrawer from '../components/ItemDrawer';
 
 const InventoryPage: React.FC = () => {
   const { hasRole } = useAuth();
@@ -27,6 +28,9 @@ const InventoryPage: React.FC = () => {
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
+  const [selected, setSelected] = useState<InventoryItem | null>(null);
 
   // pagination (client-side for now)
   const [page, setPage] = useState(0);
@@ -73,9 +77,17 @@ const InventoryPage: React.FC = () => {
     await load();
   };
 
+  const onAdd = () => {
+    setSelected(null);
+    setDrawerMode('create');
+    setDrawerOpen(true);
+  };
+
   const onEdit = (row: InventoryItem) => {
-    // will open drawer in Commit #6
-    alert(`Edit will open in a drawer (next commit). Item: ${row.code}`);
+    setSelected(row);
+    setDrawerMode('edit');
+    setDrawerOpen(true);
+    // alert(`Edit will open in a drawer (next commit). Item: ${row.code}`);
   };
 
   const onDelete = async (row: InventoryItem) => {
@@ -130,10 +142,7 @@ const InventoryPage: React.FC = () => {
 
         <Box sx={{ flex: 1 }} />
 
-        <Button
-          variant="contained"
-          onClick={() => alert('Create item drawer will open in next commit')}
-        >
+        <Button variant="contained" onClick={onAdd}>
           Add Item
         </Button>
       </Stack>
@@ -148,6 +157,15 @@ const InventoryPage: React.FC = () => {
         onPageSizeChange={setPageSize}
         onEdit={onEdit}
         onDelete={onDelete}
+      />
+
+      <ItemDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        mode={drawerMode}
+        groups={groups}
+        initial={selected}
+        onSaved={load}
       />
     </Box>
   );
