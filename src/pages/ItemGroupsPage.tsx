@@ -180,7 +180,6 @@ const ItemGroupsPage: React.FC = () => {
           rows={pagedRows}
           columns={columns}
           getRowId={(r) => r.id}
-          // rowCount={filteredRows.length}
           pageSizeOptions={[10, 25, 50, 100]}
           paginationModel={{ page, pageSize }}
           onPaginationModelChange={({ page, pageSize }) => {
@@ -190,10 +189,11 @@ const ItemGroupsPage: React.FC = () => {
           initialState={{
             sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
           }}
-          // apiRefPropCallback={(api: any) => {
-          //   (api as any).__onEdit = onEdit;
-          //   (api as any).__onDelete = onDelete;
-          // }}
+          sx={{
+            '& .MuiDataGrid-columnHeaderTitle': {
+              fontWeight: 'bold',
+            },
+          }}
         />
       </div>
 

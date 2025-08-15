@@ -185,6 +185,7 @@ const CompositeItemsPage: React.FC = () => {
             placeholder="Search by name/SKU/description"
             value={q}
             onChange={(e) => setQ(e.target.value)}
+            sx={{ width: '20vw' }}
           />
         </form>
         <Box sx={{ flex: 1 }} />
@@ -209,6 +210,11 @@ const CompositeItemsPage: React.FC = () => {
           // @ts-expect-error
           apiRefPropCallback={(api: any) => {
             (api as any).__onStockOut = onOpenStockOut;
+          }}
+          sx={{
+            '& .MuiDataGrid-columnHeaderTitle': {
+              fontWeight: 'bold',
+            },
           }}
         />
       </div>

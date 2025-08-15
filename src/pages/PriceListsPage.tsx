@@ -106,6 +106,7 @@ const PriceListsPage: React.FC = () => {
             placeholder="Search by name/description"
             value={q}
             onChange={(e) => setQ(e.target.value)}
+            sx={{ width: '20vw' }}
           />
         </form>
         <Box sx={{ flex: 1 }} />
@@ -122,6 +123,11 @@ const PriceListsPage: React.FC = () => {
           onRowDoubleClick={(params) => nav(`/price-lists/${params.id}`)}
           initialState={{
             sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
+          }}
+          sx={{
+            '& .MuiDataGrid-columnHeaderTitle': {
+              fontWeight: 'bold',
+            },
           }}
         />
       </div>

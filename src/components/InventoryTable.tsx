@@ -35,7 +35,12 @@ const InventoryTable: React.FC<Props> = ({
 }) => {
   const columns: GridColDef[] = useMemo(
     () => [
-      { field: 'code', headerName: 'Code', flex: 1, minWidth: 140 },
+      {
+        field: 'code',
+        headerName: 'Code',
+        flex: 1,
+        minWidth: 140,
+      },
       { field: 'name', headerName: 'Name', flex: 1.2, minWidth: 160 },
       { field: 'size', headerName: 'Size', width: 120 },
       { field: 'quantity', headerName: 'Qty', width: 100, type: 'number' },
@@ -99,6 +104,11 @@ const InventoryTable: React.FC<Props> = ({
         rowCount={rowCount} // for client-side this can be rows.length
         initialState={{
           sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
+        }}
+        sx={{
+          '& .MuiDataGrid-columnHeaderTitle': {
+            fontWeight: 'bold',
+          },
         }}
       />
     </div>

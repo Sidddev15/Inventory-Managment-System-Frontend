@@ -5,7 +5,7 @@ import {
   Button,
   Chip,
   CircularProgress,
-  MenuItem,
+  IconButton,
   Stack,
   TextField,
   Typography,
@@ -16,10 +16,12 @@ import {
   type GridColDef,
   type GridRenderCellParams,
 } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
 import dayjs from 'dayjs';
-import { type User, fetchUsers, updateUserRole } from '../services/users';
-import CreateUserModal from '../components/CreateUserModal';
+import { type User, fetchUsers } from '../services/users';
 import { useAuth } from '../store/AuthContext';
+import EditUserModal from '../components/EditUserModal';
+import CreateUserModal from '../components/CreateUserModal';
 
 const roleColor: Record<User['role'], ChipProps['color']> = {
   admin: 'success',
@@ -27,60 +29,8 @@ const roleColor: Record<User['role'], ChipProps['color']> = {
   viewer: 'warning',
 };
 
-// keep hooks out of renderCell
-const RoleEditorCell: React.FC<{
-  row: User;
-  meId?: number;
-  onUpdated: () => Promise<void> | void;
-}> = ({ row, meId, onUpdated }) => {
-  const [roleDraft, setRoleDraft] = useState<User['role']>(row.role);
-  const [saving, setSaving] = useState(false);
-  const canChange = row.id !== meId;
-
-  const saveRole = async () => {
-    if (!canChange) return;
-    try {
-      setSaving(true);
-      await updateUserRole(row.id, roleDraft);
-      await onUpdated();
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  return (
-    <Stack
-      direction="row"
-      spacing={1}
-      alignItems="center"
-      sx={{ height: '100%' }}
-    >
-      <TextField
-        select
-        size="small"
-        value={roleDraft}
-        onChange={(e) => setRoleDraft(e.target.value as User['role'])}
-        sx={{ width: 140 }}
-        disabled={!canChange}
-      >
-        <MenuItem value="admin">Admin</MenuItem>
-        <MenuItem value="staff">Staff</MenuItem>
-        <MenuItem value="viewer">Viewer</MenuItem>
-      </TextField>
-      <Button
-        variant="outlined"
-        size="small"
-        onClick={saveRole}
-        disabled={!canChange || saving}
-      >
-        {saving ? 'Saving…' : 'Update'}
-      </Button>
-    </Stack>
-  );
-};
-
 const UsersPage: React.FC = () => {
-  const { hasRole, user: me } = useAuth();
+  const { hasRole } = useAuth();
   const isAdmin = hasRole('admin');
 
   const [rows, setRows] = useState<User[]>([]);
@@ -88,6 +38,8 @@ const UsersPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [selected, setSelected] = useState<User | null>(null);
 
   const filtered = useMemo(() => {
     if (!q.trim()) return rows;
@@ -96,7 +48,8 @@ const UsersPage: React.FC = () => {
       (u) =>
         u.email.toLowerCase().includes(s) ||
         u.name.toLowerCase().includes(s) ||
-        u.role.toLowerCase().includes(s)
+        u.role.toLowerCase().includes(s) ||
+        (u.status ?? '').toLowerCase().includes(s)
     );
   }, [rows, q]);
 
@@ -117,6 +70,11 @@ const UsersPage: React.FC = () => {
     load();
   }, []);
 
+  const openEdit = (u: User) => {
+    setSelected(u);
+    setEditOpen(true);
+  };
+
   const cols: GridColDef<User>[] = [
     { field: 'name', headerName: 'Name', flex: 1.2, minWidth: 160 },
     { field: 'email', headerName: 'Email', flex: 1.6, minWidth: 220 },
@@ -127,6 +85,15 @@ const UsersPage: React.FC = () => {
       sortable: true,
       renderCell: (p: GridRenderCellParams<User>) => (
         <Chip size="small" color={roleColor[p.row.role]} label={p.row.role} />
+      ),
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 130,
+      sortable: true,
+      renderCell: (p: GridRenderCellParams<User>) => (
+        <Chip size="small" label={p.row.status ?? 'active'} />
       ),
     },
     {
@@ -143,11 +110,17 @@ const UsersPage: React.FC = () => {
     cols.push({
       field: 'actions',
       headerName: 'Actions',
-      width: 220,
+      width: 100,
       sortable: false,
       filterable: false,
-      renderCell: (params: GridRenderCellParams<User>) => (
-        <RoleEditorCell row={params.row} meId={me?.id} onUpdated={load} />
+      renderCell: (p: GridRenderCellParams<User>) => (
+        <IconButton
+          size="small"
+          onClick={() => openEdit(p.row)}
+          aria-label="Edit user"
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
       ),
     });
   }
@@ -158,7 +131,6 @@ const UsersPage: React.FC = () => {
         <CircularProgress />
       </Box>
     );
-
   if (err)
     return (
       <Box sx={{ p: 3 }}>
@@ -176,9 +148,10 @@ const UsersPage: React.FC = () => {
         <form onSubmit={(e) => e.preventDefault()}>
           <TextField
             size="small"
-            placeholder="Search by name/email/role"
+            placeholder="Search by name/email/role/status"
             value={q}
             onChange={(e) => setQ(e.target.value)}
+            sx={{ width: '20vw' }}
           />
         </form>
         <Box sx={{ flex: 1 }} />
@@ -194,9 +167,14 @@ const UsersPage: React.FC = () => {
           rows={filtered}
           columns={cols}
           getRowId={(r) => r.id}
-          disableRowSelectionOnClick
           initialState={{
             sorting: { sortModel: [{ field: 'createdAt', sort: 'desc' }] },
+          }}
+          disableRowSelectionOnClick
+          sx={{
+            '& .MuiDataGrid-columnHeaderTitle': {
+              fontWeight: 'bold',
+            },
           }}
         />
       </div>
@@ -205,6 +183,14 @@ const UsersPage: React.FC = () => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         onSuccess={load}
+      />
+
+      <EditUserModal
+        open={editOpen}
+        user={selected}
+        onClose={() => setEditOpen(false)}
+        onSaved={load}
+        allowRoleChange={true}
       />
     </Box>
   );

@@ -128,6 +128,7 @@ const InventoryPage: React.FC = () => {
             placeholder="Search by code or name"
             value={q}
             onChange={(e) => setQ(e.target.value)}
+            sx={{ width: '20vw' }}
           />
           <Button type="submit" variant="outlined">
             Search
