@@ -32,6 +32,9 @@ export type SaveInventoryPayload = {
     quantity?: number; // allow on create
 };
 
+// Item group CRUD
+export type SaveItemGroupPayload = { name: string; description?: string };
+
 export async function fetchInventorySummary() {
     const { data } = await http.get<InventorySummaryItem[]>('/inventory/summary');
     return data;
@@ -69,4 +72,18 @@ export async function createInventoryItem(payload: SaveInventoryPayload) {
 export async function updateInventoryItemAPI(id: number, payload: Partial<SaveInventoryPayload>) {
     const { data } = await http.put(`/inventory/${id}`, payload);
     return data;
+}
+
+export async function createItemGroup(payload: SaveInventoryPayload) {
+    const { data } = await http.post('/item-groups', payload);
+    return data;
+}
+
+export async function updateItemGroup(id: number, payload: SaveInventoryPayload) {
+    const { data } = await http.put(`/item-groups/${id}`, payload);
+    return data;
+}
+
+export async function deleteItemGroup(id: number) {
+    await http.delete(`item-groups/${id}`)
 }
