@@ -87,3 +87,9 @@ export async function updateItemGroup(id: number, payload: SaveInventoryPayload)
 export async function deleteItemGroup(id: number) {
     await http.delete(`item-groups/${id}`)
 }
+
+export async function fetchInventoryByIds(ids: number[]) {
+    const { data } = await http.get('/inventory', { params: { ids: ids.join(',') } });
+    // ^ adjust if your backend uses POST or a different param shape
+    return Array.isArray(data?.data) ? data.data : data; // normalize
+}
