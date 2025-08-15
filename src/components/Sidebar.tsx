@@ -15,6 +15,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
+import { useAuth } from '../store/AuthContext';
 
 const nav = [
   { label: 'Dashboard', icon: <DashboardIcon />, to: '/dashboard' },
@@ -29,6 +30,12 @@ const nav = [
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { hasRole } = useAuth();
+
+  const visibleNav = nav.filter((item) => {
+    if (item.to === '/users') return hasRole('admin');
+    return true;
+  });
 
   return (
     <Box
@@ -58,7 +65,17 @@ const Sidebar: React.FC = () => {
       </Box>
       <Divider />
       <List>
-        {nav.map((item) => (
+        {/* {nav.map((item) => (
+          <ListItemButton
+            key={item.to}
+            selected={pathname.startsWith(item.to)}
+            onClick={() => navigate(item.to)}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.label} />
+          </ListItemButton>
+        ))} */}
+        {visibleNav.map((item) => (
           <ListItemButton
             key={item.to}
             selected={pathname.startsWith(item.to)}
