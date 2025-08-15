@@ -4,10 +4,8 @@ import {
   Box,
   Button,
   Chip,
-  CircularProgress,
   IconButton,
   Stack,
-  TextField,
   Typography,
   type ChipProps,
 } from '@mui/material';
@@ -22,6 +20,9 @@ import { type User, fetchUsers } from '../services/users';
 import { useAuth } from '../store/AuthContext';
 import EditUserModal from '../components/EditUserModal';
 import CreateUserModal from '../components/CreateUserModal';
+import TableToolbar from '../components/TableToolbar';
+import CenteredLoader from '../components/CenteredLoader';
+// import EmptyState from '../components/EmptyState';
 
 const roleColor: Record<User['role'], ChipProps['color']> = {
   admin: 'success',
@@ -40,6 +41,10 @@ const UsersPage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selected, setSelected] = useState<User | null>(null);
+
+  const [density, setDensity] = useState<
+    'compact' | 'standard' | 'comfortable'
+  >('standard');
 
   const filtered = useMemo(() => {
     if (!q.trim()) return rows;
@@ -125,12 +130,7 @@ const UsersPage: React.FC = () => {
     });
   }
 
-  if (loading)
-    return (
-      <Box sx={{ p: 3, display: 'grid', placeItems: 'center' }}>
-        <CircularProgress />
-      </Box>
-    );
+  if (loading) return <CenteredLoader />;
   if (err)
     return (
       <Box sx={{ p: 3 }}>
@@ -145,7 +145,7 @@ const UsersPage: React.FC = () => {
       </Typography>
 
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <form onSubmit={(e) => e.preventDefault()}>
+        {/* <form onSubmit={(e) => e.preventDefault()}>
           <TextField
             size="small"
             placeholder="Search by name/email/role/status"
@@ -153,7 +153,14 @@ const UsersPage: React.FC = () => {
             onChange={(e) => setQ(e.target.value)}
             sx={{ width: '20vw' }}
           />
-        </form>
+        </form> */}
+        <TableToolbar
+          query={q}
+          onQueryChange={setQ}
+          density={density}
+          onDensityChange={setDensity}
+          placeholder="Search by name/email/role/status"
+        />
         <Box sx={{ flex: 1 }} />
         {isAdmin && (
           <Button variant="contained" onClick={() => setOpenModal(true)}>
@@ -170,6 +177,7 @@ const UsersPage: React.FC = () => {
           initialState={{
             sorting: { sortModel: [{ field: 'createdAt', sort: 'desc' }] },
           }}
+          density={density}
           disableRowSelectionOnClick
           sx={{
             '& .MuiDataGrid-columnHeaderTitle': {
@@ -178,6 +186,17 @@ const UsersPage: React.FC = () => {
           }}
         />
       </div>
+
+      {/* <EmptyState
+        title="No users found"
+        subtitle={
+          q
+            ? 'Try clearing your search.'
+            : 'Invite your team to collaborate and manage inventory.'
+        }
+        actionText={isAdmin ? 'Create User' : undefined}
+        onAction={isAdmin ? () => setOpenModal(true) : undefined}
+      /> */}
 
       <CreateUserModal
         open={openModal}
