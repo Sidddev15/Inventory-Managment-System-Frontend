@@ -1,29 +1,34 @@
+// src/services/users.ts
 import http from './http';
+
+export type Role = 'admin' | 'staff' | 'viewer';
 
 export type User = {
     id: number;
     name: string;
     email: string;
-    role: 'admin' | 'staff' | 'viewer';
+    role: Role;
+    status?: 'active' | 'inactive';
     createdAt?: string;
 };
 
 export async function fetchUsers() {
-    const { data } = await http.get<User[]>('/auth/users'); // if you mounted list under /api/auth/users
+    const { data } = await http.get<User[]>('/auth/users'); // GET /api/auth/users
     return data;
 }
 
-export async function registerUser(payload: {
+export async function createUser(payload: {
     name: string;
     email: string;
     password: string;
-    role: 'admin' | 'staff' | 'viewer';
+    role: Role;
+    status?: 'active' | 'inactive';
 }) {
-    const { data } = await http.post<User>('/auth/register', payload);
+    const { data } = await http.post<User>('/auth/users', payload); // POST /api/auth/users
     return data;
 }
 
-export async function updateUserRole(userId: number, role: 'admin' | 'staff' | 'viewer') {
-    const { data } = await http.put<User>(`/auth/users/${userId}/role`, { role }); // OPTIONAL; add in backend if not present
+export async function updateUserRole(userId: number, role: Role) {
+    const { data } = await http.put<User>(`/auth/users/${userId}/role`, { role });
     return data;
 }

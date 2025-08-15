@@ -18,7 +18,7 @@ import {
 } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 import { type User, fetchUsers, updateUserRole } from '../services/users';
-import UserInviteModal from '../components/UserInviteModal';
+import CreateUserModal from '../components/CreateUserModal';
 import { useAuth } from '../store/AuthContext';
 
 const roleColor: Record<User['role'], ChipProps['color']> = {
@@ -27,7 +27,7 @@ const roleColor: Record<User['role'], ChipProps['color']> = {
   viewer: 'warning',
 };
 
-// Keep hooks out of renderCell
+// keep hooks out of renderCell
 const RoleEditorCell: React.FC<{
   row: User;
   meId?: number;
@@ -87,7 +87,7 @@ const UsersPage: React.FC = () => {
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-  const [inviteOpen, setInviteOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const filtered = useMemo(() => {
     if (!q.trim()) return rows;
@@ -125,7 +125,7 @@ const UsersPage: React.FC = () => {
       headerName: 'Role',
       width: 140,
       sortable: true,
-      renderCell: (p: GridRenderCellParams<User, User['role']>) => (
+      renderCell: (p: GridRenderCellParams<User>) => (
         <Chip size="small" color={roleColor[p.row.role]} label={p.row.role} />
       ),
     },
@@ -183,27 +183,28 @@ const UsersPage: React.FC = () => {
         </form>
         <Box sx={{ flex: 1 }} />
         {isAdmin && (
-          <Button variant="contained" onClick={() => setInviteOpen(true)}>
-            Invite / Register User
+          <Button variant="contained" onClick={() => setOpenModal(true)}>
+            Create User
           </Button>
         )}
       </Stack>
 
-      <div style={{ height: '73vh', width: '100%' }}>
+      <div style={{ height: 560, width: '100%' }}>
         <DataGrid<User>
           rows={filtered}
           columns={cols}
           getRowId={(r) => r.id}
+          disableRowSelectionOnClick
           initialState={{
             sorting: { sortModel: [{ field: 'createdAt', sort: 'desc' }] },
           }}
         />
       </div>
 
-      <UserInviteModal
-        open={inviteOpen}
-        onClose={() => setInviteOpen(false)}
-        onSaved={load}
+      <CreateUserModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onSuccess={load}
       />
     </Box>
   );
