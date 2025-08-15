@@ -197,7 +197,7 @@ const CompositeItemsPage: React.FC = () => {
         </Button>
       </Stack>
 
-      <div style={{ height: 560, width: '100%' }}>
+      <div style={{ height: '73vh', width: '100%' }}>
         <DataGrid
           rows={filteredRows}
           columns={columns}

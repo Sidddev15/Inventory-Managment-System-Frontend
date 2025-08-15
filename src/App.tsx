@@ -9,6 +9,7 @@ import CompositeItemsPage from './pages/CompositeItemsPage';
 import PriceListsPage from './pages/PriceListsPage';
 import UsersPage from './pages/UsersPage';
 import MovementsPage from './pages/MovementsPage';
+import PriceListDetailPage from './pages/PriceListDetailPage';
 
 function App() {
   return (
@@ -80,6 +81,16 @@ function App() {
           <ProtectedRoute>
             <AppLayout>
               <PriceListsPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/price-lists/:id"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <PriceListDetailPage />
             </AppLayout>
           </ProtectedRoute>
         }
