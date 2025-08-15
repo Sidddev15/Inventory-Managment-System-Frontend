@@ -164,30 +164,55 @@ const StockOutCompositeDrawer: React.FC<Props> = ({
           Stock Out Composite
         </Typography>
         {compositeLabel && (
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontWeight: 500 }}
+          >
             {compositeLabel}
           </Typography>
         )}
       </Box>
       <Divider />
-      <Box sx={{ p: 2.5, display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box sx={{ p: 2.5, display: 'flex', flexDirection: 'column', gap: 1 }}>
         {loadingDetails ? (
           <Typography variant="body2" color="text.secondary">
             Loading kit details…
           </Typography>
         ) : components?.length ? (
           <>
-            <Typography variant="subtitle2">Components</Typography>
-            <List dense>
+            <Typography variant="h6">Components</Typography>
+            <List
+              dense
+              sx={{
+                // borderBottom: '1px solid #eee',
+                py: 0.2,
+                '& .MuiListItemText-primary': {
+                  fontWeight: 500,
+                  fontSize: '1rem',
+                  color: '#333',
+                },
+                '& .MuiListItemText-secondary': {
+                  fontSize: '0.85rem',
+                  color: '#666',
+                },
+              }}
+            >
               {components.map((c, idx) => (
                 <ListItem key={`${c.component_item_id}-${idx}`} disableGutters>
                   <ListItemText
-                    primary={`${c.code ?? `#${c.component_item_id}`} — ${
-                      c.name ?? 'Item'
-                    }`}
-                    secondary={`Qty/kit: ${c.quantity} • Available: ${
-                      c.available ?? '—'
-                    }`}
+                    primary={
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {`${c.code ?? `#${c.component_item_id}`} — ${
+                          c.name ?? 'Item'
+                        }`}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2" color="text.secondary">
+                        {`Quantity per kit: ${c.quantity}`}
+                      </Typography>
+                    }
                   />
                 </ListItem>
               ))}
