@@ -9,7 +9,7 @@
 # Proxy API to your Render backend (REPLACE the URL below with your real backend URL)
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR-RENDER-BACKEND.onrender.com/api/:splat"
+  to = "https://inventory-management-system-7rvy.onrender.com"
   status = 200
   force = true
 
