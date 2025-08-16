@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Alert, Box, CircularProgress, Typography, Grid } from '@mui/material';
+import { Alert, Box, CircularProgress, Typography } from '@mui/material';
+// import Box from '@mui/material/Box';
 // import  from '@mui/material/Grid';
 // import { fetchLowStock } from '../services/inventory';
 import { fetchLowStock, fetchInventorySummary } from '../services/inventory';
@@ -72,25 +73,34 @@ const DashboardPage: React.FC = () => {
       >
         Welcome! Low stock widgets and recent movements will appear here.
       </Typography>
-      <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid item xs={12} md={4}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridAutoFlow: 'column',
+          gridAutoColumns: 'max-content',
+          justifyContent: 'start',
+          gap: 2,
+          mb: 2,
+        }}
+      >
+        <Box sx={{ maxWidth: '200px' }}>
           <StatCard title="Total Items" value={totalItems} hint="Unique SKUs" />
-        </Grid>
-        <Grid item xs={12} md={4}>
+        </Box>
+        <Box sx={{ maxWidth: '200px' }}>
           <StatCard
             title="Total Quantity"
             value={totalQty}
             hint="All stock combined"
           />
-        </Grid>
-        <Grid item xs={12} md={4}>
+        </Box>
+        <Box sx={{ maxWidth: '200px' }}>
           <StatCard
             title="Low Stock"
             value={lowCount}
             hint="At/below threshold"
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
       <Box
         sx={{
           display: 'flex',
