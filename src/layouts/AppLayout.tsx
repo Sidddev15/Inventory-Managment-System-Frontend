@@ -4,15 +4,24 @@ import Topbar from '../components/Topbar';
 
 const AppLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f5f6f8' }}>
-      <Sidebar />
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Topbar />
-        <Box component="main" sx={{ p: 3 }}>
-          {children}
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          minHeight: '100vh',
+          bgcolor: 'background.default', // ✅ theme-aware page background
+          color: 'text.primary',
+        }}
+      >
+        <Sidebar />
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Topbar />
+          <Box component="main" sx={{ p: 3 }}>
+            {children}
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

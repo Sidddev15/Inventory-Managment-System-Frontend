@@ -41,22 +41,27 @@ const Sidebar: React.FC = () => {
     <Box
       sx={{
         width: 240,
-        bgcolor: '#ffffff',
-        borderRight: '1px solid #e7e7e7',
+        bgcolor: 'background.paper', // 🎯 theme-aware
+        borderRight: 1, // 1px + theme.divider color
+        borderColor: 'divider',
         position: 'sticky',
         top: 0,
         height: '100vh',
+        color: 'text.primary', // 🎯 theme-aware text color
       }}
     >
       <Box
         sx={{
-          padding: '15px 10px 15px 10px',
+          padding: '19px 10px 19px 10px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 700, color: 'text.primary' }}
+        >
           EEC
         </Typography>
         <Typography variant="caption" color="text.secondary">
