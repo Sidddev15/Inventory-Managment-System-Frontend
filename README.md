@@ -26,3 +26,5 @@ It connects with the backend APIs and provides role-based dashboards for Admin, 
 - **Deployment:** Vercel / Netlify
 
 ---
+## DEMO
+[Watch Demo Video](https://drive.google.com/file/d/1PQp_OO9WU114C_HYFg5bNeprOD9BUSXF/view?usp=sharing)
