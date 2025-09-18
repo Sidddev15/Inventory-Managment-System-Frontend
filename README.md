@@ -29,3 +29,4 @@ It connects with the backend APIs and provides role-based dashboards for Admin, 
 ## DEMO
 
 [WATCH DEMO VIDEO](https://drive.google.com/file/d/1PQp_OO9WU114C_HYFg5bNeprOD9BUSXF/view?usp=sharing)
+[LINK TO BACKEND REPO](https://github.com/Sidddev15/Inventory-Management-System)
